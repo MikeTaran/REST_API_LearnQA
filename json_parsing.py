@@ -8,7 +8,6 @@ try:
     obj = json.loads(json_text)
     print(obj['messages'][1]["message"])
     print(obj['messages'][1]["timestamp"])
-
 except JSONDecodeError:
     print("json_text is not json format")
 
