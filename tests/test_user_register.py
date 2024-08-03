@@ -14,20 +14,8 @@ class TestUserRegistration(BaseCase):
         "no_password"
     ]
 
-    def setup_method(self):
-        rnd = datetime.now().strftime("%H%M%S")
-        self.email = f"vintokot{rnd}@example.com"
-        print(self.email)
-
     def test_create_user_success(self):
-        password = "1234"
-        data = {
-            "username": "Kot",
-            "firstName": "Kot",
-            "lastName": "Vint",
-            "email": self.email,
-            "password": password
-        }
+        data = self.prepare_registration_data()
         url = "https://playground.learnqa.ru/api/user/"
         response = requests.post(url, data=data)
         print(response.text)
@@ -36,15 +24,9 @@ class TestUserRegistration(BaseCase):
 
     def test_create_user_with_incorrect_email(self):
         rnd = datetime.now().strftime("%H%M%S")
-        self.email = f"vintokot{rnd}2example.com"
+        email = f"vintokot{rnd}2example.com"
         password = "1234"
-        data = {
-            "username": "Kot",
-            "firstName": "Kot",
-            "lastName": "Vint",
-            "email": self.email,
-            "password": password
-        }
+        data = self.prepare_registration_data(email)
         url = "https://playground.learnqa.ru/api/user/"
         response = requests.post(url, data=data)
         print(response.text)
@@ -53,11 +35,12 @@ class TestUserRegistration(BaseCase):
 
     def test_create_user_with_short_username(self):
         password = "1234"
+        email = "vintokot@example.com"
         data = {
             "username": "K",
             "firstName": "Kot",
             "lastName": "Vint",
-            "email": self.email,
+            "email": email,
             "password": password
         }
         url = "https://playground.learnqa.ru/api/user/"
@@ -69,6 +52,7 @@ class TestUserRegistration(BaseCase):
 
     def test_create_user_with_long_username(self):
         password = "1234"
+        email = "vintokot@example.com"
         data = {
             "username": "The Postman JavaScript API functionality enables you to programmatically access and alter "
                         "request and response data and variables using the pm object. You can also dynamically alter "
@@ -78,7 +62,7 @@ class TestUserRegistration(BaseCase):
                         "execution order to build request workflows for the Collection Runner",
             "firstName": "Kot",
             "lastName": "Vint",
-            "email": self.email,
+            "email": email,
             "password": password
         }
         url = "https://playground.learnqa.ru/api/user/"
@@ -111,11 +95,12 @@ class TestUserRegistration(BaseCase):
     @pytest.mark.parametrize("cond", conds)
     def test_create_user_with_wrong_params(self, cond):
         password = "1234"
+        email = "vintokot@example.com"
         data = {
             "username": "Kot",
             "firstName": "Kot",
             "lastName": "Vint",
-            "email": self.email,
+            "email": email,
             "password": password
         }
         conditions_to_keys = {
