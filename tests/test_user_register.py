@@ -1,8 +1,8 @@
 from datetime import datetime
 import pytest
-import requests
 from lib.base_case import BaseCase
 from lib.assertion import Assertion
+from lib.my_requests import MyRequests
 
 
 class TestUserRegistration(BaseCase):
@@ -16,8 +16,8 @@ class TestUserRegistration(BaseCase):
 
     def test_create_user_success(self):
         data = self.prepare_registration_data()
-        url = "https://playground.learnqa.ru/api/user/"
-        response = requests.post(url, data=data)
+        uri = "/user/"
+        response = MyRequests.post(uri, data=data)
         print(response.text)
         Assertion.assert_response_code_status(response, 200)
         Assertion.assert_json_has_key(response, "id")
@@ -25,10 +25,9 @@ class TestUserRegistration(BaseCase):
     def test_create_user_with_incorrect_email(self):
         rnd = datetime.now().strftime("%H%M%S")
         email = f"vintokot{rnd}2example.com"
-        password = "1234"
         data = self.prepare_registration_data(email)
-        url = "https://playground.learnqa.ru/api/user/"
-        response = requests.post(url, data=data)
+        url = "/user/"
+        response = MyRequests.post(url, data=data)
         print(response.text)
         Assertion.assert_response_code_status(response, 400)
         assert response.text == "Invalid email format", f"Unexpected response text: {response.text}"
@@ -43,8 +42,8 @@ class TestUserRegistration(BaseCase):
             "email": email,
             "password": password
         }
-        url = "https://playground.learnqa.ru/api/user/"
-        response = requests.post(url, data=data)
+        uri = "/user/"
+        response = MyRequests.post(uri, data=data)
         print(response.text)
         Assertion.assert_response_code_status(response, 400)
         assert response.text == "The value of 'username' field is too short", \
@@ -65,8 +64,8 @@ class TestUserRegistration(BaseCase):
             "email": email,
             "password": password
         }
-        url = "https://playground.learnqa.ru/api/user/"
-        response = requests.post(url, data=data)
+        uri = "/user/"
+        response = MyRequests.post(uri, data=data)
         print(response.text)
         Assertion.assert_response_code_status(response, 400)
         assert response.text == "The value of 'username' field is too long", \
@@ -82,8 +81,8 @@ class TestUserRegistration(BaseCase):
             "email": login,
             "password": password
         }
-        url = "https://playground.learnqa.ru/api/user/"
-        response = requests.post(url, data=data)
+        uri = "/user/"
+        response = MyRequests.post(uri, data=data)
 
         print()
         print(response.status_code)
@@ -114,8 +113,8 @@ class TestUserRegistration(BaseCase):
         if key_to_clear:
             # data[key_to_clear] = ""
             del data[key_to_clear]
-        url = "https://playground.learnqa.ru/api/user/"
-        response = requests.post(url, data=data)
+        uri = "/user/"
+        response = MyRequests.post(uri, data=data)
         print(data)
         print(response.text)
         Assertion.assert_response_code_status(response, 400)
